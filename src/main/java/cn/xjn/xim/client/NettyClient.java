@@ -44,9 +44,10 @@ public class NettyClient {
                         log.info("The Netty client successfully connected.");
                     } else {
                         int order = MAX_RETRY - retry + 1;
-                        if (order >= MAX_RETRY) {
-                            log.error("The number of retries has been exhausted,the Netty client connected failed.");
-                            System.exit(0);
+                        if (order > MAX_RETRY) {
+                            log.error("The number of retries has been exhausted, the netty client connected failed.");
+                            bootstrap.config().group().shutdownGracefully();
+                            return;
                         }
                         int delay = 1 << order;
                         log.error("Connected failed, the client will make a {} attempt to reconnect after {} seconds.", order, delay);

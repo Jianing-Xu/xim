@@ -3,6 +3,8 @@
 
     <property name="APP_NAME" value="xim" />
     <property name="LOG_DIR" value="${user.home}/dev/applogs/${APP_NAME}" />
+    <property name="LOG_FILE_SIZE" value="100MB" />
+    <property name="LOG_KEEP_TIME" value="30" />
     <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS}  %-5level [%thread] %logger{15} - %msg%n"/>
 
     <contextName>${APP_NAME}</contextName>
@@ -19,10 +21,10 @@
         <file>${LOG_DIR}/${APP_NAME}.log</file>
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_DIR}/${APP_NAME}%d{yyyy-MM-dd}-%i.log</fileNamePattern>
-            <maxHistory>30</maxHistory>
+            <fileNamePattern>${LOG_DIR}/${APP_NAME}_%d{yyyy-MM-dd}_%i.log</fileNamePattern>
+            <maxHistory>${LOG_KEEP_TIME}</maxHistory>
             <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>100MB</maxFileSize>
+                <maxFileSize>${LOG_FILE_SIZE}</maxFileSize>
             </TimeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
         <encoder>
