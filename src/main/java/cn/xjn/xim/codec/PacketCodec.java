@@ -1,8 +1,8 @@
 package cn.xjn.xim.codec;
 
-import cn.xjn.xim.protocol.LoginRequestPacket;
 import cn.xjn.xim.protocol.Packet;
 import cn.xjn.xim.protocol.command.Command;
+import cn.xjn.xim.protocol.request.LoginRequestPacket;
 import cn.xjn.xim.serialize.Serializer;
 import cn.xjn.xim.serialize.impl.JSONSerializer;
 import io.netty.buffer.ByteBuf;
@@ -16,12 +16,12 @@ import java.util.Map;
  */
 public class PacketCodec {
 
+    public static final PacketCodec INSTANCE = new PacketCodec();
     private static final int MAGIC_NUMBER = 0x12345678;
-
     private final Map<Byte, Class<? extends Packet>> packetTypeMap;
     private final Map<Byte, Serializer> serializerMap;
 
-    public PacketCodec() {
+    private PacketCodec() {
         this.packetTypeMap = new HashMap<>();
         packetTypeMap.put(Command.LOGIN_REQUEST, LoginRequestPacket.class);
         this.serializerMap = new HashMap<>();

@@ -1,5 +1,6 @@
 package cn.xjn.xim.server;
 
+import cn.xjn.xim.server.handler.LoginRequestHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -31,7 +32,7 @@ public class NettyServer {
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel ch) throws Exception {
-                        ch.pipeline().addLast();
+                        ch.pipeline().addLast(new LoginRequestHandler());
                     }
                 });
 

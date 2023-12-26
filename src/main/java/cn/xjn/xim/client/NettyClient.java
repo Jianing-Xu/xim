@@ -1,5 +1,6 @@
 package cn.xjn.xim.client;
 
+import cn.xjn.xim.client.handler.LoginResponseHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -30,7 +31,7 @@ public class NettyClient {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
-
+                        ch.pipeline().addLast(new LoginResponseHandler());
                     }
                 });
 

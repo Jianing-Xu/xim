@@ -1,5 +1,6 @@
-package cn.xjn.xim.protocol;
+package cn.xjn.xim.protocol.request;
 
+import cn.xjn.xim.protocol.Packet;
 import cn.xjn.xim.protocol.command.Command;
 import lombok.Data;
 
@@ -9,8 +10,6 @@ import lombok.Data;
  */
 @Data
 public class LoginRequestPacket extends Packet {
-
-    private Integer userId;
 
     private String username;
 
