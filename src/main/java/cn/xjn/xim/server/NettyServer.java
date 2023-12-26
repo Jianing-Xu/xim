@@ -2,6 +2,7 @@ package cn.xjn.xim.server;
 
 import cn.xjn.xim.codec.PacketDecoder;
 import cn.xjn.xim.codec.PacketEncoder;
+import cn.xjn.xim.codec.Spliter;
 import cn.xjn.xim.server.handler.LoginRequestHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
@@ -34,6 +35,7 @@ public class NettyServer {
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel ch) throws Exception {
+                        ch.pipeline().addLast(new Spliter());
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginRequestHandler());
                         ch.pipeline().addLast(new PacketEncoder());

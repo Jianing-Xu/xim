@@ -1,2 +1,2 @@
 # xim
-MVP IM
+An MVP Instant Messaging based on Console
