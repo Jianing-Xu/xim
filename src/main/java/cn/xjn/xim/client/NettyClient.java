@@ -1,6 +1,8 @@
 package cn.xjn.xim.client;
 
 import cn.xjn.xim.client.handler.LoginResponseHandler;
+import cn.xjn.xim.codec.PacketDecoder;
+import cn.xjn.xim.codec.PacketEncoder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -31,7 +33,9 @@ public class NettyClient {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
+                        ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginResponseHandler());
+                        ch.pipeline().addLast(new PacketEncoder());
                     }
                 });
 
