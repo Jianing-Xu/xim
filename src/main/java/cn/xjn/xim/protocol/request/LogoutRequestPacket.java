@@ -11,10 +11,6 @@ import lombok.Data;
 @Data
 public class LogoutRequestPacket extends Packet {
 
-    private String username;
-
-    private String password;
-
     @Override
     public Byte getCommand() {
         return Command.LOGOUT_REQUEST;

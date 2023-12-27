@@ -26,7 +26,7 @@ public class LoginConsoleCommand implements ConsoleCommand {
         waitForLoginResponse();
     }
 
-    private static void waitForLoginResponse() {
+    private void waitForLoginResponse() {
         try {
             TimeUnit.SECONDS.sleep(1);
         } catch (InterruptedException ignored) {
