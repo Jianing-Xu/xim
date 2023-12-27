@@ -3,10 +3,7 @@ package cn.xjn.xim.server;
 import cn.xjn.xim.codec.PacketCodecHandler;
 import cn.xjn.xim.codec.Spliter;
 import cn.xjn.xim.handler.IMIdleStateHandler;
-import cn.xjn.xim.server.handler.AuthHandler;
-import cn.xjn.xim.server.handler.HeartbeatRequestHandler;
-import cn.xjn.xim.server.handler.IMServerHandler;
-import cn.xjn.xim.server.handler.LoginRequestHandler;
+import cn.xjn.xim.server.handler.*;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -35,18 +32,7 @@ public class NettyServer {
                 .option(ChannelOption.SO_BACKLOG, 1024)
                 .childOption(ChannelOption.SO_KEEPALIVE, true)
                 .childOption(ChannelOption.TCP_NODELAY, true)
-                .childHandler(new ChannelInitializer<NioSocketChannel>() {
-                    @Override
-                    protected void initChannel(NioSocketChannel ch) throws Exception {
-                        ch.pipeline().addLast(new IMIdleStateHandler());
-                        ch.pipeline().addLast(new Spliter());
-                        ch.pipeline().addLast(PacketCodecHandler.INSTANCE);
-                        ch.pipeline().addLast(LoginRequestHandler.INSTANCE);
-                        ch.pipeline().addLast(HeartbeatRequestHandler.INSTANCE);
-                        ch.pipeline().addLast(AuthHandler.INSTANCE);
-                        ch.pipeline().addLast(IMServerHandler.INSTANCE);
-                    }
-                });
+                .childHandler(new IMServerChannelInitializer());
 
         bind(serverBootstrap, PORT);
     }
