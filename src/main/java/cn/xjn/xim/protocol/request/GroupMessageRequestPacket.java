@@ -11,12 +11,12 @@ import lombok.Data;
 @Data
 public class GroupMessageRequestPacket extends Packet {
 
-    private String toUserId;
+    private String toGroupId;
 
     private String message;
 
-    public GroupMessageRequestPacket(String toUserId, String message) {
-        this.toUserId = toUserId;
+    public GroupMessageRequestPacket(String toGroupId, String message) {
+        this.toGroupId = toGroupId;
         this.message = message;
     }
 

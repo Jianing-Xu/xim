@@ -2,7 +2,10 @@ package cn.xjn.xim.protocol.response;
 
 import cn.xjn.xim.protocol.Packet;
 import cn.xjn.xim.protocol.command.Command;
+import cn.xjn.xim.session.Session;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * @author xjn
@@ -11,9 +14,9 @@ import lombok.Data;
 @Data
 public class ListGroupMemberResponsePacket extends Packet {
 
-    private String username;
+    private String groupId;
 
-    private String password;
+    private List<Session> sessions;
 
     @Override
     public Byte getCommand() {

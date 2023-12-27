@@ -11,9 +11,7 @@ import lombok.Data;
 @Data
 public class ListGroupMemberRequestPacket extends Packet {
 
-    private String username;
-
-    private String password;
+    private String groupId;
 
     @Override
     public Byte getCommand() {

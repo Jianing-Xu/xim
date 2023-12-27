@@ -15,9 +15,10 @@ public class SendToUserConsoleCommand implements ConsoleCommand {
 
     @Override
     public void exec(Scanner sc, Channel channel) {
-        log.info("Enter message to send to other:");
+        log.info("Enter userId and message split by space to send to user:");
         String toUserId = sc.next();
         String msg = sc.next();
-        channel.writeAndFlush(new MessageRequestPacket(toUserId, msg));
+        MessageRequestPacket requestPacket = new MessageRequestPacket(toUserId, msg);
+        channel.writeAndFlush(requestPacket);
     }
 }

@@ -4,6 +4,8 @@ import cn.xjn.xim.protocol.Packet;
 import cn.xjn.xim.protocol.command.Command;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author xjn
  * @date 2023-12-26
@@ -11,9 +13,13 @@ import lombok.Data;
 @Data
 public class CreateGroupResponsePacket extends Packet {
 
-    private String username;
+    private boolean success;
 
-    private String password;
+    private String groupId;
+
+    private List<String> usernameList;
+
+    private String reason;
 
     @Override
     public Byte getCommand() {

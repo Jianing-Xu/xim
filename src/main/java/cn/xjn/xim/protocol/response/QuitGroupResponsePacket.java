@@ -11,9 +11,11 @@ import lombok.Data;
 @Data
 public class QuitGroupResponsePacket extends Packet {
 
-    private String username;
+    private String groupId;
 
-    private String password;
+    private boolean success;
+
+    private String reason;
 
     @Override
     public Byte getCommand() {

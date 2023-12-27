@@ -11,14 +11,11 @@ import lombok.Data;
 @Data
 public class GroupMessageResponsePacket extends Packet {
 
-    private String toUserId;
+    private String fromUser;
+
+    private String fromGroupId;
 
     private String message;
-
-    public GroupMessageResponsePacket(String toUserId, String message) {
-        this.toUserId = toUserId;
-        this.message = message;
-    }
 
     @Override
     public Byte getCommand() {
