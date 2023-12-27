@@ -25,7 +25,7 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
-        if (SessionManager.hasLogin(ctx.channel())){
+        if (SessionManager.hasLogin(ctx.channel())) {
             log.info("Authenticate successful, there is no need to auth again, the AuthHandler is removed");
         } else {
             log.warn("Authenticate failed, force to close connection.");

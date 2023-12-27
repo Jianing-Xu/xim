@@ -1,12 +1,12 @@
 package cn.xjn.xim.client;
 
+import cn.xjn.xim.client.console.ConsoleCommandManager;
+import cn.xjn.xim.client.console.LoginConsoleCommand;
 import cn.xjn.xim.client.handler.LoginResponseHandler;
 import cn.xjn.xim.client.handler.MessageResponseHandler;
 import cn.xjn.xim.codec.PacketDecoder;
 import cn.xjn.xim.codec.PacketEncoder;
 import cn.xjn.xim.codec.Spliter;
-import cn.xjn.xim.protocol.request.LoginRequestPacket;
-import cn.xjn.xim.protocol.request.MessageRequestPacket;
 import cn.xjn.xim.util.SessionManager;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -75,31 +75,17 @@ public class NettyClient {
 
     private static void startConsoleThread(Channel channel) {
         Scanner sc = new Scanner(System.in);
+        ConsoleCommandManager consoleCommandManager = new ConsoleCommandManager();
+        LoginConsoleCommand loginConsoleCommand = new LoginConsoleCommand();
         new Thread(() -> {
             while (!Thread.interrupted()) {
                 if (!SessionManager.hasLogin(channel)) {
-                    log.info("Please enter username and password to login:");
-                    String username = sc.next();
-                    String password = sc.next();
-                    LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
-                    loginRequestPacket.setUsername(username);
-                    loginRequestPacket.setPassword(password);
-                    channel.writeAndFlush(loginRequestPacket);
-                    waitForLoginResponse();
+                    loginConsoleCommand.exec(sc, channel);
                 } else {
-                    log.info("Enter message to send to the server:");
-                    String toUserId = sc.next();
-                    String msg = sc.next();
-                    channel.writeAndFlush(new MessageRequestPacket(toUserId, msg));
+                    log.info("Please enter command:");
+                    consoleCommandManager.exec(sc, channel);
                 }
             }
         }).start();
-    }
-
-    private static void waitForLoginResponse() {
-        try {
-            TimeUnit.SECONDS.sleep(1);
-        } catch (InterruptedException ignored) {
-        }
     }
 }
