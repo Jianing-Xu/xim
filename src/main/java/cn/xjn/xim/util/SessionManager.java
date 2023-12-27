@@ -4,6 +4,7 @@ import cn.xjn.xim.attribute.Attributes;
 import cn.xjn.xim.session.Session;
 import io.netty.channel.Channel;
 import io.netty.channel.group.ChannelGroup;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author xjn
  * @date 2023-12-26
  */
+@Slf4j
 public class SessionManager {
 
     private static final Map<String, Channel> USER_ID_CHANNEL_MAP = new ConcurrentHashMap<>();
@@ -24,8 +26,10 @@ public class SessionManager {
 
     public static void unbindSession(Channel channel) {
         if (hasLogin(channel)) {
-            USER_ID_CHANNEL_MAP.remove(getSession(channel).getUserId());
+            Session session = getSession(channel);
+            USER_ID_CHANNEL_MAP.remove(session.getUserId());
             channel.attr(Attributes.SESSION).set(null);
+            log.info("[{}] logout.", session.getUsername());
         }
     }
 
@@ -38,7 +42,7 @@ public class SessionManager {
     }
 
     public static boolean hasLogin(Channel channel) {
-        return channel.hasAttr(Attributes.SESSION);
+        return getSession(channel) != null;
     }
 
     public static void bindChannelGroup(String groupId, ChannelGroup channelGroup) {
