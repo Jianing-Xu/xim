@@ -1,10 +1,13 @@
 package cn.xjn.xim.client;
 
 import cn.xjn.xim.client.handler.LoginResponseHandler;
+import cn.xjn.xim.client.handler.MessageResponseHandler;
 import cn.xjn.xim.codec.PacketDecoder;
 import cn.xjn.xim.codec.PacketEncoder;
 import cn.xjn.xim.codec.Spliter;
+import cn.xjn.xim.protocol.request.LoginRequestPacket;
 import cn.xjn.xim.protocol.request.MessageRequestPacket;
+import cn.xjn.xim.util.SessionManager;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -41,6 +44,7 @@ public class NettyClient {
                         ch.pipeline().addLast(new Spliter());
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginResponseHandler());
+                        ch.pipeline().addLast(new MessageResponseHandler());
                         ch.pipeline().addLast(new PacketEncoder());
                     }
                 });
@@ -70,14 +74,32 @@ public class NettyClient {
     }
 
     private static void startConsoleThread(Channel channel) {
+        Scanner sc = new Scanner(System.in);
         new Thread(() -> {
             while (!Thread.interrupted()) {
-                log.info("Enter message to send to the server:");
-                Scanner sc = new Scanner(System.in);
-                String msg = sc.nextLine();
-
-                channel.writeAndFlush(new MessageRequestPacket(msg));
+                if (!SessionManager.hasLogin(channel)) {
+                    log.info("Please enter username and password to login:");
+                    String username = sc.next();
+                    String password = sc.next();
+                    LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
+                    loginRequestPacket.setUsername(username);
+                    loginRequestPacket.setPassword(password);
+                    channel.writeAndFlush(loginRequestPacket);
+                    waitForLoginResponse();
+                } else {
+                    log.info("Enter message to send to the server:");
+                    String toUserId = sc.next();
+                    String msg = sc.next();
+                    channel.writeAndFlush(new MessageRequestPacket(toUserId, msg));
+                }
             }
         }).start();
+    }
+
+    private static void waitForLoginResponse() {
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException ignored) {
+        }
     }
 }

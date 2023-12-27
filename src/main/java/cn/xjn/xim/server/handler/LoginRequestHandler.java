@@ -2,11 +2,15 @@ package cn.xjn.xim.server.handler;
 
 import cn.xjn.xim.protocol.request.LoginRequestPacket;
 import cn.xjn.xim.protocol.response.LoginResponsePacket;
+import cn.xjn.xim.session.Session;
 import cn.xjn.xim.util.IDUtil;
-import cn.xjn.xim.util.LoginUtil;
+import cn.xjn.xim.util.SessionManager;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author xjn
@@ -23,8 +27,10 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
 
         if (auth(requestPacket)) {
             responsePacket.setSuccess(true);
-            responsePacket.setUserId(IDUtil.genRandomId());
-            LoginUtil.markAsLogin(ctx.channel());
+            String userId = IDUtil.genRandomId();
+            Session session = new Session(userId, username);
+            responsePacket.setUserId(userId);
+            SessionManager.bindSession(session, ctx.channel());
             log.info("[{}] login successful.", requestPacket.getUsername());
         } else {
             responsePacket.setSuccess(false);
@@ -32,11 +38,29 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
             log.info("login failed.");
         }
 
-        ctx.writeAndFlush(responsePacket);
+        ctx.channel().writeAndFlush(responsePacket);
     }
 
     private boolean auth(LoginRequestPacket requestPacket) {
-        // TODO auth
-        return true;
+        String username = requestPacket.getUsername();
+        String password = requestPacket.getPassword();
+        /* test code */
+        Map<String, String> tempUserMap = new HashMap<>();
+        tempUserMap.put("root", "root");
+        tempUserMap.put("aaa", "aaa");
+        tempUserMap.put("bbb", "bbb");
+        tempUserMap.put("ccc", "ccc");
+        String pwd = tempUserMap.get(username);
+        if (password.equals(pwd)) {
+            return true;
+        } else {
+            return false;
+        }
+        /* test code */
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        SessionManager.unbindSession(ctx.channel());
     }
 }
