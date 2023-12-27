@@ -3,6 +3,7 @@ package cn.xjn.xim.server.handler;
 import cn.xjn.xim.protocol.request.LoginRequestPacket;
 import cn.xjn.xim.protocol.response.LoginResponsePacket;
 import cn.xjn.xim.util.IDUtil;
+import cn.xjn.xim.util.LoginUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
         if (auth(requestPacket)) {
             responsePacket.setSuccess(true);
             responsePacket.setUserId(IDUtil.genRandomId());
+            LoginUtil.markAsLogin(ctx.channel());
             log.info("[{}] login successful.", requestPacket.getUsername());
         } else {
             responsePacket.setSuccess(false);

@@ -3,7 +3,9 @@ package cn.xjn.xim.server;
 import cn.xjn.xim.codec.PacketDecoder;
 import cn.xjn.xim.codec.PacketEncoder;
 import cn.xjn.xim.codec.Spliter;
+import cn.xjn.xim.server.handler.AuthHandler;
 import cn.xjn.xim.server.handler.LoginRequestHandler;
+import cn.xjn.xim.server.handler.MessageRequestHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -38,6 +40,8 @@ public class NettyServer {
                         ch.pipeline().addLast(new Spliter());
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginRequestHandler());
+                        ch.pipeline().addLast(new AuthHandler());
+                        ch.pipeline().addLast(new MessageRequestHandler());
                         ch.pipeline().addLast(new PacketEncoder());
                     }
                 });

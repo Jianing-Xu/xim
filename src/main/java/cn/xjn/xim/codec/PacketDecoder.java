@@ -1,5 +1,6 @@
 package cn.xjn.xim.codec;
 
+import cn.xjn.xim.protocol.Packet;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;

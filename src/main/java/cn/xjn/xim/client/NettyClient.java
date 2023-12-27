@@ -4,13 +4,17 @@ import cn.xjn.xim.client.handler.LoginResponseHandler;
 import cn.xjn.xim.codec.PacketDecoder;
 import cn.xjn.xim.codec.PacketEncoder;
 import cn.xjn.xim.codec.Spliter;
+import cn.xjn.xim.protocol.request.MessageRequestPacket;
 import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -49,6 +53,7 @@ public class NettyClient {
                 .addListener(future -> {
                     if (future.isSuccess()) {
                         log.info("The Netty client successfully connected.");
+                        startConsoleThread(((ChannelFuture) future).channel());
                     } else {
                         int order = MAX_RETRY - retry + 1;
                         if (order > MAX_RETRY) {
@@ -62,5 +67,17 @@ public class NettyClient {
                                 .schedule(() -> connect(bootstrap, host, port, retry - 1), delay, TimeUnit.SECONDS);
                     }
                 });
+    }
+
+    private static void startConsoleThread(Channel channel) {
+        new Thread(() -> {
+            while (!Thread.interrupted()) {
+                log.info("Enter message to send to the server:");
+                Scanner sc = new Scanner(System.in);
+                String msg = sc.nextLine();
+
+                channel.writeAndFlush(new MessageRequestPacket(msg));
+            }
+        }).start();
     }
 }

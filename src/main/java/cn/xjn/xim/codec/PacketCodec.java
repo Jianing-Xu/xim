@@ -3,6 +3,9 @@ package cn.xjn.xim.codec;
 import cn.xjn.xim.protocol.Packet;
 import cn.xjn.xim.protocol.command.Command;
 import cn.xjn.xim.protocol.request.LoginRequestPacket;
+import cn.xjn.xim.protocol.request.MessageRequestPacket;
+import cn.xjn.xim.protocol.response.LoginResponsePacket;
+import cn.xjn.xim.protocol.response.MessageResponsePacket;
 import cn.xjn.xim.serialize.Serializer;
 import cn.xjn.xim.serialize.impl.JSONSerializer;
 import io.netty.buffer.ByteBuf;
@@ -25,6 +28,9 @@ public class PacketCodec {
     private PacketCodec() {
         this.packetTypeMap = new HashMap<>();
         packetTypeMap.put(Command.LOGIN_REQUEST, LoginRequestPacket.class);
+        packetTypeMap.put(Command.LOGIN_RESPONSE, LoginResponsePacket.class);
+        packetTypeMap.put(Command.MESSAGE_REQUEST, MessageRequestPacket.class);
+        packetTypeMap.put(Command.MESSAGE_RESPONSE, MessageResponsePacket.class);
         this.serializerMap = new HashMap<>();
         JSONSerializer jsonSerializer = new JSONSerializer();
         serializerMap.put(jsonSerializer.getSerializerAlgorithm(), jsonSerializer);
