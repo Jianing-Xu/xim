@@ -9,8 +9,9 @@ import io.netty.channel.SimpleChannelInboundHandler;
  * @date 2023-12-27
  */
 public class HeartbeatResponseHandler extends SimpleChannelInboundHandler<HeartbeatResponsePacket> {
+
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, HeartbeatResponsePacket msg) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, HeartbeatResponsePacket responsePacket) throws Exception {
 
     }
 }

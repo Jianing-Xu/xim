@@ -27,6 +27,7 @@ public class IMClientHandler extends SimpleChannelInboundHandler<Packet> {
         HANDLER_MAP.put(Command.LIST_GROUP_MEMBER_RESPONSE, new ListGroupMemberResponseHandler());
         HANDLER_MAP.put(Command.GROUP_MESSAGE_RESPONSE, new GroupMessageResponseHandler());
         HANDLER_MAP.put(Command.LOGOUT_RESPONSE, new LogoutResponseHandler());
+        HANDLER_MAP.put(Command.HEARTBEAT_RESPONSE, new HeartbeatResponseHandler());
     }
 
     @Override

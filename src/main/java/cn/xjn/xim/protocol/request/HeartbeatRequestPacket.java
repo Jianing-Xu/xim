@@ -11,15 +11,6 @@ import lombok.Data;
 @Data
 public class HeartbeatRequestPacket extends Packet {
 
-    private String toUserId;
-
-    private String message;
-
-    public HeartbeatRequestPacket(String toUserId, String message) {
-        this.toUserId = toUserId;
-        this.message = message;
-    }
-
     @Override
     public Byte getCommand() {
         return Command.HEARTBEAT_REQUEST;
