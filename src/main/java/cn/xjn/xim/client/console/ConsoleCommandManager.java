@@ -34,6 +34,10 @@ public class ConsoleCommandManager implements ConsoleCommand {
             return;
         }
         String command = sc.next();
+        if (command.equalsIgnoreCase("exit")) {
+            channel.close();
+            System.exit(1);
+        }
         ConsoleCommand consoleCommand = consoleCommandMap.get(command);
         if (consoleCommand != null) {
             consoleCommand.exec(sc, channel);

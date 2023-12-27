@@ -12,6 +12,7 @@ import java.util.Map;
 /**
  * @author xjn
  * @date 2023-12-28
+ * compress command handler
  */
 @ChannelHandler.Sharable
 public class IMServerHandler extends SimpleChannelInboundHandler<Packet> {
