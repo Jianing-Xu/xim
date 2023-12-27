@@ -18,7 +18,7 @@ public class PacketCodecHandlerTest {
 
     @Test
     public void test_decode() {
-        EmbeddedChannel embeddedChannel = new EmbeddedChannel(new PacketDecoder());
+        EmbeddedChannel embeddedChannel = new EmbeddedChannel(PacketCodecHandler.INSTANCE);
         LoginRequestPacket sourcePacket = new LoginRequestPacket();
         String username = UUID.randomUUID().toString();
         sourcePacket.setUsername(username);
@@ -35,7 +35,7 @@ public class PacketCodecHandlerTest {
 
     @Test
     public void test_encode() {
-        EmbeddedChannel embeddedChannel = new EmbeddedChannel(new PacketEncoder());
+        EmbeddedChannel embeddedChannel = new EmbeddedChannel(PacketCodecHandler.INSTANCE);
         LoginRequestPacket source = new LoginRequestPacket();
         String username = UUID.randomUUID().toString();
         source.setUsername(username);

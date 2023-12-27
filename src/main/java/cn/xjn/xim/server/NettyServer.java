@@ -1,9 +1,11 @@
 package cn.xjn.xim.server;
 
-import cn.xjn.xim.codec.PacketDecoder;
-import cn.xjn.xim.codec.PacketEncoder;
+import cn.xjn.xim.codec.PacketCodecHandler;
 import cn.xjn.xim.codec.Spliter;
-import cn.xjn.xim.server.handler.*;
+import cn.xjn.xim.server.handler.AuthHandler;
+import cn.xjn.xim.server.handler.HeartbeatRequestHandler;
+import cn.xjn.xim.server.handler.IMServerHandler;
+import cn.xjn.xim.server.handler.LoginRequestHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -36,18 +38,11 @@ public class NettyServer {
                     @Override
                     protected void initChannel(NioSocketChannel ch) throws Exception {
                         ch.pipeline().addLast(new Spliter());
-                        ch.pipeline().addLast(new PacketDecoder());
-                        ch.pipeline().addLast(new LoginRequestHandler());
-                        ch.pipeline().addLast(new AuthHandler());
-                        ch.pipeline().addLast(new LogoutRequestHandler());
-                        ch.pipeline().addLast(new MessageRequestHandler());
-                        ch.pipeline().addLast(new CreateGroupRequestHandler());
-                        ch.pipeline().addLast(new JoinGroupRequestHandler());
-                        ch.pipeline().addLast(new GroupMessageRequestHandler());
+                        ch.pipeline().addLast(PacketCodecHandler.INSTANCE);
+                        ch.pipeline().addLast(LoginRequestHandler.INSTANCE);
+                        ch.pipeline().addLast(AuthHandler.INSTANCE);
+                        ch.pipeline().addLast(IMServerHandler.INSTANCE);
                         ch.pipeline().addLast(new HeartbeatRequestHandler());
-                        ch.pipeline().addLast(new ListGroupMemberRequestHandler());
-                        ch.pipeline().addLast(new QuitGroupRequestHandler());
-                        ch.pipeline().addLast(new PacketEncoder());
                     }
                 });
 
@@ -55,9 +50,11 @@ public class NettyServer {
     }
 
     private static void bind(final ServerBootstrap serverBootstrap, final int port) {
+        long begin = System.currentTimeMillis();
         serverBootstrap.bind(port).addListener(future -> {
             if (future.isSuccess()) {
-                log.info("The Netty server started up successfully.");
+                log.info("The Netty server started up successfully, cost {}ms.",
+                        System.currentTimeMillis() - begin);
             } else {
                 log.error("The Netty server bind port[{}] failed", port);
             }

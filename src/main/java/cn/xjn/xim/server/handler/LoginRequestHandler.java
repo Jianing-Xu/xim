@@ -5,6 +5,7 @@ import cn.xjn.xim.protocol.response.LoginResponsePacket;
 import cn.xjn.xim.session.Session;
 import cn.xjn.xim.util.IDUtil;
 import cn.xjn.xim.util.SessionManager;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +18,13 @@ import java.util.Map;
  * @date 2023-12-26
  */
 @Slf4j
+@ChannelHandler.Sharable
 public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginRequestPacket> {
+
+    public static final LoginRequestHandler INSTANCE = new LoginRequestHandler();
+
+    private LoginRequestHandler() {
+    }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, LoginRequestPacket requestPacket) throws Exception {

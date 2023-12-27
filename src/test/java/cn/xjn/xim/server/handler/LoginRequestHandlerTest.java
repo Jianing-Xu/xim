@@ -17,11 +17,11 @@ public class LoginRequestHandlerTest {
 
     @Test
     public void test_login() {
-        EmbeddedChannel embeddedChannel = new EmbeddedChannel(new LoginRequestHandler());
+        EmbeddedChannel embeddedChannel = new EmbeddedChannel(LoginRequestHandler.INSTANCE);
         LoginRequestPacket source = new LoginRequestPacket();
-        String username = UUID.randomUUID().toString();
+        String username = "root";
         source.setUsername(username);
-        source.setPassword("123456");
+        source.setPassword("root");
 
         embeddedChannel.writeInbound(source);
         LoginResponsePacket responsePacket = embeddedChannel.readOutbound();

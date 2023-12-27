@@ -5,6 +5,7 @@ import cn.xjn.xim.protocol.response.ListGroupMemberResponsePacket;
 import cn.xjn.xim.session.Session;
 import cn.xjn.xim.util.SessionManager;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
@@ -18,7 +19,13 @@ import java.util.List;
  * @date 2023-12-27
  */
 @Slf4j
+@ChannelHandler.Sharable
 public class ListGroupMemberRequestHandler extends SimpleChannelInboundHandler<ListGroupMemberRequestPacket> {
+
+    public static final ListGroupMemberRequestHandler INSTANCE = new ListGroupMemberRequestHandler();
+
+    private ListGroupMemberRequestHandler() {
+    }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ListGroupMemberRequestPacket requestPacket) throws Exception {

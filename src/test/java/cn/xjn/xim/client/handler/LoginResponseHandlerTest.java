@@ -5,8 +5,6 @@ import cn.xjn.xim.util.IDUtil;
 import io.netty.channel.embedded.EmbeddedChannel;
 import org.junit.Test;
 
-import java.util.UUID;
-
 import static org.junit.Assert.assertNull;
 
 /**

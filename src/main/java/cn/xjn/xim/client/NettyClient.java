@@ -2,9 +2,9 @@ package cn.xjn.xim.client;
 
 import cn.xjn.xim.client.console.ConsoleCommandManager;
 import cn.xjn.xim.client.console.LoginConsoleCommand;
-import cn.xjn.xim.client.handler.*;
-import cn.xjn.xim.codec.PacketDecoder;
-import cn.xjn.xim.codec.PacketEncoder;
+import cn.xjn.xim.client.handler.HeartbeatResponseHandler;
+import cn.xjn.xim.client.handler.IMClientHandler;
+import cn.xjn.xim.codec.PacketCodecHandler;
 import cn.xjn.xim.codec.Spliter;
 import cn.xjn.xim.util.SessionManager;
 import io.netty.bootstrap.Bootstrap;
@@ -41,18 +41,9 @@ public class NettyClient {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
                         ch.pipeline().addLast(new Spliter());
-                        ch.pipeline().addLast(new PacketDecoder());
-                        ch.pipeline().addLast(new LoginResponseHandler());
-                        ch.pipeline().addLast(new MessageResponseHandler());
-                        ch.pipeline().addLast(new LogoutResponseHandler());
-                        ch.pipeline().addLast(new CreateGroupResponseHandler());
-                        ch.pipeline().addLast(new GroupMessageResponseHandler());
+                        ch.pipeline().addLast(PacketCodecHandler.INSTANCE);
+                        ch.pipeline().addLast(IMClientHandler.INSTANCE);
                         ch.pipeline().addLast(new HeartbeatResponseHandler());
-                        ch.pipeline().addLast(new JoinGroupResponseHandler());
-                        ch.pipeline().addLast(new ListGroupMemberResponseHandler());
-                        ch.pipeline().addLast(new LogoutResponseHandler());
-                        ch.pipeline().addLast(new QuitGroupResponseHandler());
-                        ch.pipeline().addLast(new PacketEncoder());
                     }
                 });
 
@@ -60,10 +51,12 @@ public class NettyClient {
     }
 
     private static void connect(Bootstrap bootstrap, String host, int port, int retry) {
+        long begin = System.currentTimeMillis();
         bootstrap.connect(host, port)
                 .addListener(future -> {
                     if (future.isSuccess()) {
-                        log.info("The Netty client successfully connected.");
+                        log.info("The Netty client successfully connected, cost {}ms",
+                                System.currentTimeMillis() - begin);
                         startConsoleThread(((ChannelFuture) future).channel());
                     } else {
                         int order = MAX_RETRY - retry + 1;
